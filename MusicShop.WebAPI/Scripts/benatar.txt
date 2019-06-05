@@ -1,0 +1,230 @@
+
+create database MusicShop
+go
+use MusicShop
+/*==============================================================*/
+/* Table: ALBUM                                                 */
+/*==============================================================*/
+create table ALBUM (
+   AL_ID                int                  not null,
+   AL_DATE_RELEASE      datetime             not null,
+   AL_DESC              varchar(1024)        null,
+   constraint PK_ALBUM primary key (AL_ID)
+)
+go
+
+/*==============================================================*/
+/* Table: AUTHOR                                                */
+/*==============================================================*/
+create table AUTHOR (
+   AU_ID                int                  not null,
+   PUB_ID               int                  null,
+   AU_NAME              varchar(128)         not null,
+   AU_DESC              varchar(1024)        null,
+   AU_WEBSITE           varchar(1024)        null,
+   constraint PK_AUTHOR primary key (AU_ID)
+)
+go
+
+/*==============================================================*/
+/* Index: PUBLISH_FK                                            */
+/*==============================================================*/
+create nonclustered index PUBLISH_FK on AUTHOR (PUB_ID ASC)
+go
+
+/*==============================================================*/
+/* Table: CLIENT                                                */
+/*==============================================================*/
+create table CLIENT (
+   CL_ID                int                  not null,
+   CL_NAME              varchar(200)         not null,
+   CL_EMAIL             varchar(100)         null,
+   CL_PHONE             varchar(30)          not null,
+   constraint PK_CLIENT primary key (CL_ID)
+)
+go
+
+/*==============================================================*/
+/* Table: GENRE                                                 */
+/*==============================================================*/
+create table GENRE (
+   GENRE_ID             int                  not null,
+   GENRE_NAME           varchar(128)         not null,
+   GENRE_DESC           varchar(1024)        null,
+   constraint PK_GENRE primary key (GENRE_ID)
+)
+go
+
+/*==============================================================*/
+/* Table: Includes                                              */
+/*==============================================================*/
+create table Includes (
+   SONG_ID              int                  not null,
+   CL_ID                int                  not null,
+   PUR_ID               int                  not null,
+   constraint PK_INCLUDES primary key (SONG_ID, CL_ID, PUR_ID)
+)
+go
+
+/*==============================================================*/
+/* Index: Includes2_FK                                          */
+/*==============================================================*/
+
+create nonclustered index Includes2_FK on Includes (CL_ID ASC,
+  PUR_ID ASC)
+go
+
+/*==============================================================*/
+/* Index: Includes_FK                                           */
+/*==============================================================*/
+
+create nonclustered index Includes_FK on Includes (SONG_ID ASC)
+go
+
+/*==============================================================*/
+/* Table: PAYMENT_CARD                                          */
+/*==============================================================*/
+create table PAYMENT_CARD (
+   CL_ID                int                  not null,
+   PAY_ID               int                  not null,
+   PAY_NUMBER           varchar(16)          not null,
+   PAY_HOLDER           varchar(200)         not null,
+   PAY_EXPIRE_DATE      datetime             not null,
+   PAY_CVC              varchar(3)           not null,
+   constraint PK_PAYMENT_CARD primary key (CL_ID, PAY_ID)
+)
+go
+
+/*==============================================================*/
+/* Index: BIND_TO_FK                                            */
+/*==============================================================*/
+
+create nonclustered index BIND_TO_FK on PAYMENT_CARD (CL_ID ASC)
+go
+
+/*==============================================================*/
+/* Table: PUBLISHER                                             */
+/*==============================================================*/
+create table PUBLISHER (
+   PUB_ID               int                  not null,
+   PUB_NAME             varchar(128)         not null,
+   PUB_WEBSITE          varchar(128)         null,
+   constraint PK_PUBLISHER primary key (PUB_ID)
+)
+go
+
+/*==============================================================*/
+/* Table: PURCHASE                                              */
+/*==============================================================*/
+create table PURCHASE (
+   CL_ID                int                  not null,
+   PUR_ID               int                  not null,
+   PUR_DATE             datetime             null,
+   TOTAL_SUM            float                null,
+   TOTAL_QTY            int                  null,
+   constraint PK_PURCHASE primary key (CL_ID, PUR_ID)
+)
+go
+
+/*==============================================================*/
+/* Index: PAYS_FK                                               */
+/*==============================================================*/
+
+
+
+
+create nonclustered index PAYS_FK on PURCHASE (CL_ID ASC)
+go
+
+/*==============================================================*/
+/* Table: SONG                                                  */
+/*==============================================================*/
+create table SONG (
+   SONG_ID              int                  not null,
+   GENRE_ID             int                  null,
+   AU_ID                int                  not null,
+   AL_ID                int                  not null,
+   SONG_NAME            varchar(200)         not null,
+   PRICE                float                null,
+   LYRICS               varchar(2048)        null,
+   DURATION             float                not null,
+   LICENSE              varchar(1024)        null,
+   constraint PK_SONG primary key (SONG_ID)
+)
+go
+
+/*==============================================================*/
+/* Index: BELONGS_TO_FK                                         */
+/*==============================================================*/
+
+
+
+
+create nonclustered index BELONGS_TO_FK on SONG (GENRE_ID ASC)
+go
+
+/*==============================================================*/
+/* Index: OWNS_FK                                               */
+/*==============================================================*/
+
+
+
+
+create nonclustered index OWNS_FK on SONG (AU_ID ASC)
+go
+
+/*==============================================================*/
+/* Index: CONSIST_OF_FK                                         */
+/*==============================================================*/
+
+
+
+
+create nonclustered index CONSIST_OF_FK on SONG (AL_ID ASC)
+go
+
+alter table AUTHOR
+   add constraint FK_AUTHOR_PUBLISH_BY_PUBLISHER foreign key (PUB_ID)
+      references PUBLISHER (PUB_ID)
+         on update set null on delete set null
+go
+
+alter table Includes
+   add constraint FK_INCLUDES_INCLUDES_SONG foreign key (SONG_ID)
+      references SONG (SONG_ID)
+go
+
+alter table Includes
+   add constraint FK_INCLUDES_INCLUDES2_PURCHASE foreign key (CL_ID, PUR_ID)
+      references PURCHASE (CL_ID, PUR_ID)
+go
+
+alter table PAYMENT_CARD
+   add constraint FK_PAYMENT__BIND_TO_CLIENT foreign key (CL_ID)
+      references CLIENT (CL_ID)
+go
+
+alter table PURCHASE
+   add constraint FK_PURCHASE_PAYS_CLIENT foreign key (CL_ID)
+      references CLIENT (CL_ID)
+         on update cascade on delete cascade
+go
+
+alter table SONG
+   add constraint FK_SONG_BELONGS_T_GENRE foreign key (GENRE_ID)
+      references GENRE (GENRE_ID)
+         on delete set null
+go
+
+alter table SONG
+   add constraint FK_ALBUM_CONSIST_OF_SONGS foreign key (AL_ID)
+      references ALBUM (AL_ID)
+         on update cascade on delete cascade
+go
+
+alter table SONG
+   add constraint FK_SONG_OWNS_AUTHOR foreign key (AU_ID)
+      references AUTHOR (AU_ID)
+         on update cascade on delete cascade
+go
+

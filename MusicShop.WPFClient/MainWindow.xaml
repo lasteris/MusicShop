@@ -1,0 +1,211 @@
+﻿<Window x:Class="MusicShop.WPFClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MusicShop.WPFClient"
+        xmlns:views="clr-namespace:MusicShop.WPFClient.Views"
+        xmlns:vms="clr-namespace:MusicShop.WPFClient.ViewModels"
+        xmlns:ie="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        mc:Ignorable="d"
+        xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"                      
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Height="600" Width="1024" wpf:TransitionAssist.DisableTransitions="True">
+    <Window.Resources>
+        <views:UserControlAllMusic x:Key="AllMusicView"/>
+        <views:UserControlCart x:Key="CartView" />
+        <views:UserControlFirstPage x:Key="FirstPageView"/>
+        <views:UserControlPerformers x:Key="PerformersView"/>
+        <views:UserControlProfile x:Key="ProfileView"/>
+        <views:UserControlPublishers x:Key="PublishersView"/>
+    </Window.Resources>
+    
+    <Window.DataContext>
+        <vms:MainVM />
+    </Window.DataContext>
+   
+    <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown" >
+        <Grid.Effect>
+            <DropShadowEffect BlurRadius="15"
+                                  Direction="-90"
+                                  RenderingBias="Quality"
+                                  ShadowDepth="2"/>
+        </Grid.Effect>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.ColumnSpan="2"
+              Grid.Row="0">
+            <wpf:ColorZone Mode="Light">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <wpf:PackIcon Kind="ShoppingMusic"  VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Style="{StaticResource MaterialDesignTitleTextBlock}">
+                            Olympus Music Store
+                        </TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Style="{StaticResource MaterialDesignToolButton}"
+                                Height="30" Width="30"
+                                Padding="0" x:Name="WindowClose">
+                            <wpf:PackIcon Kind="WindowClose" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </wpf:ColorZone>
+        </Grid>
+        
+        <!--#region панель слева-->
+        <Grid Grid.Row="1" Grid.Column="0">
+            <wpf:Card VerticalAlignment="Stretch" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height=".3*"/>
+                    </Grid.RowDefinitions>
+                    <wpf:TransitioningContent x:Name="TrainsitionigContentSlide" 
+                                              OpeningEffect="{wpf:TransitionEffect Kind=None}" Grid.ColumnSpan="2"
+                                              >
+                        <Grid x:Name="GridCursor"
+                              Background="#fafafa"
+                              Width="10"
+                              HorizontalAlignment="Left"
+                              Height="60"
+                              VerticalAlignment="Top"/>
+                    </wpf:TransitioningContent>
+                    <ListView SelectedIndex="{Binding Index}" 
+                              x:Name="ListViewMenu"
+                              wpf:TransitionAssist.DisableTransitions="True" Grid.ColumnSpan="2">
+                        <ie:Interaction.Triggers>
+                            <ie:EventTrigger EventName="SelectionChanged">
+                                <ie:InvokeCommandAction Command="{Binding GoToSelectedViewCommand}"  CommandParameter="{Binding Index}"/>
+                            </ie:EventTrigger>
+                        </ie:Interaction.Triggers>
+                        <ListViewItem Height="60">
+                            <StackPanel Orientation="Horizontal">
+                                <wpf:PackIcon Kind="Application" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock VerticalAlignment="Center" 
+                                       Text="Главная" 
+                                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                       FontSize="17"
+                                       Margin="20,0"/>
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem Height="60">
+                            <StackPanel Orientation="Horizontal">
+                                <wpf:PackIcon Kind="domain" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock VerticalAlignment="Center" 
+                                       Text="Лейблы" 
+                                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                       FontSize="17"
+                                       Margin="20,0"/>
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem Height="60">
+                            <StackPanel Orientation="Horizontal">
+                                <wpf:PackIcon Kind="ManMan" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock VerticalAlignment="Center" 
+                                       Text="Исполнители" 
+                                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                       FontSize="17"
+                                       Margin="20,0"/>
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem Height="60">
+                            <StackPanel Orientation="Horizontal">
+                                <wpf:PackIcon Kind="LibraryMusic" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock VerticalAlignment="Center" 
+                                       Text="Все композиции" 
+                                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                       FontSize="17"
+                                       Margin="20,0"/>
+                            </StackPanel>
+                        </ListViewItem>
+                        <!--<ListViewItem Height="60">
+                            <StackPanel Orientation="Horizontal">
+                                <wpf:PackIcon Kind="Like" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock VerticalAlignment="Center" 
+                                       Text="Понравилось" 
+                                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                       FontSize="17"
+                                       Margin="20,0"/>
+                            </StackPanel>
+                        </ListViewItem>-->
+                        <ListViewItem Height="60">
+                            <StackPanel Orientation="Horizontal">
+                                <wpf:PackIcon Kind="ShoppingCart" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock VerticalAlignment="Center" 
+                                       Text="Корзина" 
+                                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                       FontSize="17"
+                                       Margin="20,0"/>
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem Height="60">
+                            <StackPanel Orientation="Horizontal">
+                                <wpf:PackIcon Kind="Account" VerticalAlignment="Center" Margin="5"/>
+                                <TextBlock VerticalAlignment="Center" 
+                                       Text="Личный кабинет" 
+                                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                                       FontSize="17"
+                                       Margin="20,0"/>
+                            </StackPanel>
+                        </ListViewItem>
+                    </ListView>
+
+                    <Button Grid.Row="1"
+                            Background="#fafafa"
+                            Foreground="#000000"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Stretch"
+                            Margin="5"
+                            wpf:RippleAssist.Feedback="#DD000000"
+                            x:Name="AuthButton">
+                        Авторизация
+                    </Button>
+                </Grid>
+            </wpf:Card>
+        </Grid>
+        <!--#endregion-->
+
+        <Grid x:Name="ContentArea"  Grid.Row="1" Grid.Column="1"
+              Margin="20">
+            <Grid.Resources>
+                <DataTemplate DataType="{x:Type vms:AllMusicVM}">
+                    <views:UserControlAllMusic/>
+                </DataTemplate>
+                <!--<DataTemplate DataType="{x:Type vms:CartVM}">
+                    <views:UserControlCart/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vms:FirstPageVM}">
+                    <views:UserControlFirstPage/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vms:PerformersVM}">
+                    <views:UserControlPerformers/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vms:ProfileVM}">
+                    <views:UserControlProfile/>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vms:ProfileVM}">
+                    <views:UserControlPublishers/>
+                </DataTemplate>-->
+            </Grid.Resources>
+            <ContentControl Content="{Binding CurrentView}"/>
+        </Grid>
+    </Grid>
+</Window>

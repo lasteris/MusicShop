@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="MusicShop.WPFClient.Views.UserControlAllMusic"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MusicShop.WPFClient"
+             xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:vms="clr-namespace:MusicShop.WPFClient.ViewModels"
+             mc:Ignorable="d" 
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             d:DesignHeight="600" d:DesignWidth="1024">
+    <UserControl.DataContext>
+        <vms:AllMusicVM/>
+    </UserControl.DataContext>
+    <Grid>
+        <ScrollViewer>
+            <ListBox ItemsSource="{Binding Music}"
+                     SelectedItem="{Binding Song}"> <!--Binding-->
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <wpf:Card Width="200" Margin="10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="140"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Image Stretch="UniformToFill"
+                                       Height="140"
+                                       Width="196"
+                                       Source="{Binding Image}"/>
+                                <!--Binding-->
+                                <Button Grid.Row="0"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                                        ToolTip="Добавить композицию в корзину">
+                                    <wpf:PackIcon Kind="AddShoppingCart"/>
+                                </Button>
+
+                                <StackPanel Grid.Row="1" Margin="5">
+                                    <TextBlock Text="{Binding Name, StringFormat={}{0}}"
+                                               VerticalAlignment="Center" TextWrapping="Wrap"/> <!--Binding Name-->
+                                    <TextBlock Text="{Binding Author, StringFormat={}От {0}}"
+                                               VerticalAlignment="Center" TextWrapping="Wrap"/> <!--Binding Author-->
+                                    <TextBlock Text="{Binding Album, StringFormat={}Альбом {0}}"
+                                               VerticalAlignment="Center" TextWrapping="Wrap"/><!--Binding Album-->
+                                    <TextBlock Text="{Binding DateRelease, StringFormat={}Выпущено {0:dd.MM.yyyy}}"
+                                               VerticalAlignment="Center" TextWrapping="Wrap"/><!--Binding DateRelease-->
+                                </StackPanel>
+                                
+                                <!--<StackPanel Orientation="Horizontal"
+                                            Grid.Row="2"
+                                            HorizontalAlignment="Right">
+                                    <Button Style="{StaticResource MaterialDesignToolButton}"
+                                            ToolTip="Добавить в понравившиеся">
+                                        <wpf:PackIcon Kind="Heart"/>
+                                    </Button>
+                                </StackPanel>-->
+                                
+                            </Grid>
+                        </wpf:Card>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                    
+                </ListBox.ItemsPanel>
+            </ListBox>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
