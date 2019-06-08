@@ -1,10 +1,11 @@
-﻿<Window x:Class="MusicShop.WPFClient.Auth"
+﻿<Window x:Class="MusicShop.WPFClient.LoginView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicShop.WPFClient"
         mc:Ignorable="d"
+        xmlns:vms="clr-namespace:MusicShop.WPFClient.ViewModels"
         xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"                      
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
@@ -15,7 +16,11 @@
         WindowStyle="None"
         Width="350"
         Height="350"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        x:Name="This">
+    <Window.DataContext>
+        <vms:LoginVM/>
+    </Window.DataContext>
     <Grid>
         <wpf:Card HorizontalAlignment="Center"
                   VerticalAlignment="Center"
@@ -25,7 +30,7 @@
             <StackPanel>
                 
                 <!--#region FIO + Phone-->
-                <TextBox  wpf:HintAssist.Hint="Фамилия Имя Отчество"
+                <!--<TextBox  wpf:HintAssist.Hint="Фамилия Имя Отчество"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                           Margin="0,15"
                           wpf:TextFieldAssist.UnderlineBrush="#fafafa"
@@ -36,24 +41,29 @@
                           Margin="0,15"
                           wpf:TextFieldAssist.UnderlineBrush="#fafafa"
                           wpf:HintAssist.Foreground="#fafafa"
-                          Visibility="Collapsed"/>
+                          Visibility="Collapsed"/>-->
                 <!--#endregion-->
                 <TextBox  wpf:HintAssist.Hint="Логин"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                           Margin="0,15"
                           wpf:TextFieldAssist.UnderlineBrush="#fafafa"
-                          wpf:HintAssist.Foreground="#fafafa"/>
+                          wpf:HintAssist.Foreground="#fafafa"
+                          x:Name="UserName"
+                          Text="{Binding Login}"/>
                 
                 <PasswordBox wpf:HintAssist.Hint="Пароль"
                              Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
                              Margin="0,15"
                              wpf:TextFieldAssist.UnderlineBrush="#fafafa"
-                             wpf:HintAssist.Foreground="#fafafa"/>
+                             wpf:HintAssist.Foreground="#fafafa"
+                             x:Name="UserPass"/>
                 <Button HorizontalAlignment="Center"
                         Content="Войти"
                         Background="#fafafa"
                         Foreground="#000000"
-                        wpf:RippleAssist.Feedback="#DD000000"/>
+                        wpf:RippleAssist.Feedback="#DD000000"
+                        Command="{Binding LoginCommand}"
+                        CommandParameter="{Binding ElementName=This}"/>
                 <CheckBox Style="{StaticResource MaterialDesignCheckBox}"
                           Margin="5,10"
                           Foreground="#fafafa">

@@ -29,33 +29,38 @@
                         <StackPanel>
                             <!--#region FIO + Phone-->
                             <TextBox  wpf:HintAssist.Hint="Фамилия Имя Отчество"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                          Margin="0,5"
-                          wpf:TextFieldAssist.UnderlineBrush="#fafafa"
-                          wpf:HintAssist.Foreground="#fafafa"/>
+                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                      Margin="0,5"
+                                      wpf:TextFieldAssist.UnderlineBrush="#fafafa"
+                                      wpf:HintAssist.Foreground="#fafafa"
+                                      Text="{Binding Name}"/>
                             <TextBox  wpf:HintAssist.Hint="Номер телефона"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                          Margin="0,5"
-                          wpf:TextFieldAssist.UnderlineBrush="#fafafa"
-                          wpf:HintAssist.Foreground="#fafafa"/>
+                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                      Margin="0,5"
+                                      wpf:TextFieldAssist.UnderlineBrush="#fafafa"
+                                      wpf:HintAssist.Foreground="#fafafa"
+                                      Text="{Binding Phone}"/>
                             <!--#endregion-->
                             <TextBox  wpf:HintAssist.Hint="Логин"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                          Margin="0,5"
-                          wpf:TextFieldAssist.UnderlineBrush="#fafafa"
-                          wpf:HintAssist.Foreground="#fafafa"/>
+                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                      Margin="0,5"
+                                      wpf:TextFieldAssist.UnderlineBrush="#fafafa"
+                                      wpf:HintAssist.Foreground="#fafafa"
+                                      Text="{Binding Login}"/>
 
                             <PasswordBox wpf:HintAssist.Hint="Пароль"
-                             Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-                             Margin="0,5"
-                             wpf:TextFieldAssist.UnderlineBrush="#fafafa"
-                             wpf:HintAssist.Foreground="#fafafa"/>
+                                         Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                                         Margin="0,5"
+                                         wpf:TextFieldAssist.UnderlineBrush="#fafafa"
+                                         wpf:HintAssist.Foreground="#fafafa"                                         
+                                         x:Name="UserPass"/>
                             <Button HorizontalAlignment="Center"
-                        Margin="0,5"
-                        Content="Сохранить изменения"
-                        Background="#fafafa"
-                        Foreground="#000000"
-                        wpf:RippleAssist.Feedback="#DD000000"/>
+                                    Margin="0,5"
+                                    Content="Сохранить изменения"
+                                    Background="#fafafa"
+                                    Foreground="#000000"
+                                    wpf:RippleAssist.Feedback="#DD000000"
+                                    Command="{Binding SaveChangesCommand}" CommandParameter="сохранить изменения"/>
                         </StackPanel>
                     </GroupBox>
 

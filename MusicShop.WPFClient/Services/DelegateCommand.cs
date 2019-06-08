@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MusicShop.WPFClient.ViewModels;
+using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MusicShop.WPFClient
@@ -30,4 +32,5 @@ namespace MusicShop.WPFClient
             execute(parameter);
         }
     }
+
 }

@@ -7,12 +7,14 @@ namespace MusicShop.WPFClient.ViewModels
 {
     public class AllMusicVM : BindableBase
     {
-        MusicShopAPIHelper ext;
+        private readonly MusicShopAPIHelper ext;
         public AllMusicVM()
         {
             ext = new MusicShopAPIHelper();
-             LoadMusicAsync();
+
+            LoadMusicAsync(Options.MusicOptions);
         }
+
         public ObservableCollection<SongResponse> Music { get; set; }
 
         private SongResponse song;
@@ -27,11 +29,14 @@ namespace MusicShop.WPFClient.ViewModels
             }
         }
 
-        private void LoadMusicAsync()
+        private void LoadMusicAsync(Options options)
         {
-            Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
-                Music = new ObservableCollection<SongResponse>(ext.GetAllMusicAsync().Result);
+                if (Options.MusicOptions.IsStraight)
+                    Options.MusicOptions.Clear();
+
+                Music = new ObservableCollection<SongResponse>(ext.GetAllMusicAsync(options));
             }
             ).Wait();
         }

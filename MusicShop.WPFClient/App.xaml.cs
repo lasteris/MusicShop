@@ -1,17 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MusicShop.WPFClient.ViewModels;
+using System;
+
 using System.Windows;
 
 namespace MusicShop.WPFClient
 {
-    /// <summary>
-    /// Логика взаимодействия для App.xaml
-    /// </summary>
     public partial class App : Application
     {
+
+        //public DisplayRootRegistry displayRootRegistry = new DisplayRootRegistry();
+        //MainVM mainWindowViewModel;
+
+        //public App()
+        //{
+        //    displayRootRegistry.RegisterWindowType<MainVM, MainView>();
+        //    displayRootRegistry.RegisterWindowType<LoginVM, LoginView>();
+        //}
+
+        //protected override async void OnStartup(StartupEventArgs e)
+        //{
+        //    base.OnStartup(e);
+
+        //    mainWindowViewModel = new MainVM();
+
+        //    await displayRootRegistry.ShowModalPresentation(mainWindowViewModel);
+
+        //    Shutdown();
+        //}
     }
 }

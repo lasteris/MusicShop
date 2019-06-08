@@ -12,9 +12,23 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ScrollViewer>
-            <ItemsControl x:Name="ListViewPublishers" ItemsSource="{Binding}">
-                <ItemsControl.ItemTemplate>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ListBox x:Name="ListViewPublishers"
+                     ItemsSource="{Binding Publishers}"
+                     SelectedItem="{Binding SelectedPublisher}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
                     <DataTemplate>
                         <wpf:Card Width="200" Height="250" Margin="10">
                             <Grid>
@@ -30,24 +44,30 @@
                                        Source="{Binding Image}"/>
 
                                 <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                                            Margin="10,0"
-                                            VerticalAlignment="Bottom"
-                                            HorizontalAlignment="Right"
-                                            Grid.Row="0"
-                                            ToolTip="Просмотреть исполнителей">
+                                        Margin="10,0"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Center"
+                                        Grid.Row="0"
+                                        ToolTip="Просмотреть исполнителей"
+                                        Command="{Binding ElementName=ListViewPublishers, Path=DataContext.GoToPublishersAuthorsCommand}"
+                                        CommandParameter="{Binding}">
                                     <wpf:PackIcon Kind="Show" />
                                 </Button>
-
-                                <!--На лучшие дни: плашка с описанием-->
                                 <!--<StackPanel Grid.Row="0"
                                             VerticalAlignment="Bottom"
                                             HorizontalAlignment="Right">
-                                    <wpf:PopupBox Style="{StaticResource MaterialDesignToolPopupBox}" 
-                                                  Padding="2 0 2 0">
+                                    <wpf:PopupBox Padding="2 0 2 0">
                                         <StackPanel>
-                                            <Button Content="Веб-сайт" />
-                                            <Button Content="Описание" />
-                                        </StackPanel>
+                                            <TextBlock>
+                                                <Hyperlink Command="{Binding GoToSite}"
+                                                           CommandParameter="{Binding Site}"
+                                                           TextDecorations="None"
+                                                           Foreground="{StaticResource MaterialDesignBody}"
+                                                           NavigateUri="{Binding Site}">                                                     
+                                                </Hyperlink>
+                                            </TextBlock>
+                                <TextBlock Text="{Binding Description}" />
+                                </StackPanel>
                                     </wpf:PopupBox>
                                 </StackPanel>-->
 
@@ -70,13 +90,13 @@
                             </Grid>
                         </wpf:Card>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                </ListBox.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-            </ItemsControl>
+            </ListBox>
         </ScrollViewer>
     </Grid>
 </UserControl>

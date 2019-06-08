@@ -1,15 +1,16 @@
 ﻿
+using System.Security;
 using System.Windows.Controls;
 
 namespace MusicShop.WPFClient.Views
 {
-    public partial class UserControlProfile : UserControl
+    public partial class UserControlProfile : UserControl, IHavePassword
     {
         public UserControlProfile()
         {
             InitializeComponent();
-
-           // ListViewMusic.ItemsSource = Test.GetMusics();
         }
+
+        public SecureString Password => UserPass.SecurePassword;
     }
 }

@@ -22,12 +22,28 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Margin="5"
-                wpf:RippleAssist.Feedback="#DD000000">
+                wpf:RippleAssist.Feedback="#DD000000"
+                Command="{Binding BuyCommand}"
+                CommandParameter="{Binding Music}">
             Оформить покупку
         </Button>
-        <ScrollViewer>
-            <ItemsControl ItemsSource="{Binding Music}" x:Name="ListViewCart">
-                <ItemsControl.ItemTemplate>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ListBox ItemsSource="{Binding Music}"
+                     x:Name="ListViewCart"
+                     SelectedItem="SelectedSong">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
                     <DataTemplate>
                         <wpf:Card Width="200" Margin="10">
                             <Grid>
@@ -58,26 +74,16 @@
                                     <TextBlock Text="{Binding DateRelease, StringFormat={}Выпущено {0:dd.MM.yyyy}}"
                                                VerticalAlignment="Center" TextWrapping="Wrap"/>
                                 </StackPanel>
-
-                                <!--<StackPanel Orientation="Horizontal"
-                                            Grid.Row="2"
-                                            HorizontalAlignment="Right">
-                                    <Button Style="{StaticResource MaterialDesignToolButton}"
-                                            ToolTip="Добавить в понравившиеся">
-                                        <wpf:PackIcon Kind="Heart"/>
-                                    </Button>
-                                </StackPanel>-->
-
                             </Grid>
                         </wpf:Card>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>
                     </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+                </ListBox.ItemsPanel>
+            </ListBox>
         </ScrollViewer>
     </Grid>
 </UserControl>

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using MusicShop.WebAPI.Extensions;
 using MusicShop.WebAPI.Model;
 
 namespace MusicShop.WebAPI.Controllers
@@ -23,16 +21,29 @@ namespace MusicShop.WebAPI.Controllers
         //Получить данные профиля
 
         // GET api/v1/client
-        [HttpGet]
-        public IActionResult Login(string login, string password)
+        [HttpGet("{login}")]
+        public IActionResult Login(string login, string key)
         {
-            var response = _context.Clients.Where(c => c.ClLogin == login && c.ClPassword == password);
-
-            if (response != null)
+            var query = _context.Clients.Where(c => c.ClLogin == login).AsQueryable();
+            
+            if(query != null)
             {
-                return Ok();
-            }
+                var response = query.Where(c => c.ClPassword == key)
+                                    .Select( c => new ClientResponse
+                                    {
+                                        Name = c.ClName,
+                                        Password = c.ClPassword,
+                                        Email = c.ClEmail,
+                                        Login = c.ClLogin,
+                                        Phone = c.ClPhone
+                                    }).SingleOrDefault();
 
+                if(response != null)
+                {
+                    return Ok(response);
+                }
+                return BadRequest();
+            }
             return NotFound();
         }
 

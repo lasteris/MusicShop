@@ -1,38 +1,70 @@
-﻿using MusicShop.WPFClient.Views;
+﻿using MusicShop.WPFClient.Models;
+using MusicShop.WPFClient.Services;
 
 namespace MusicShop.WPFClient.ViewModels
 {
    public class MainVM : BindableBase
     {
         private int index;
+        public readonly WindowFactory windowFactory;
         private object currentView;
         private DelegateCommand toVewCommand;
+        private DelegateCommand toLoginCommand;
+        private DelegateCommand closeAppCommand;
+        private DelegateCommand moveCommand;
         public DelegateCommand GoToSelectedViewCommand
         {
             get
             {
                 return toVewCommand ?? (toVewCommand = new DelegateCommand((index) =>
                 {
+
                     switch (index)
                     {
                         case 0:
-                            CurrentView = new FirstPageVM();
-                            break;
+                            {
+                                if(!(CurrentView is FirstPageVM))
+                                    CurrentView = new FirstPageVM();
+                                break;
+                            }
+                            
                         case 1:
-                            CurrentView = new PublisherVM();
-                            break;
+                            {
+                                if (!(CurrentView is PublisherVM))
+                                    CurrentView = new PublisherVM();
+                                break;
+                            }
+                            
                         case 2:
-                            CurrentView = new PerformersVM();
-                            break;
+                            {
+                                if (!(CurrentView is PerformersVM))
+                                    CurrentView = new PerformersVM();
+                                break;
+                            }
+                           
                         case 3:
-                            CurrentView = new AllMusicVM();
-                            break;
+                            {
+                                if (!(CurrentView is AllMusicVM))
+                                {
+                                    //Так как мы переходим в список музыки через sidebar, выставляем true
+                                    //чтобы при загрузке музыки потерлись все ранее установленные поля настроек
+                                    Options.MusicOptions.IsStraight = true;
+                                    CurrentView = new AllMusicVM();                                    
+                                }
+                                break;
+                            }
                         case 4:
-                            CurrentView = new CartVM();
-                            break;
+                            {
+                                if (!(CurrentView is CartVM))
+                                    CurrentView = new CartVM();
+                                break;
+                            }
                         case 5:
-                            CurrentView = new ProfileVM();
-                            break;
+                            {
+                                if (!(CurrentView is ProfileVM))
+                                    CurrentView = new ProfileVM();
+                                break;
+                            }
                         default:
                             break;
                     }
@@ -40,12 +72,49 @@ namespace MusicShop.WPFClient.ViewModels
             }
         }
 
+        public DelegateCommand LoginCommand
+        {
+            get
+            {
+                return toLoginCommand ?? (toLoginCommand = new DelegateCommand(obj =>
+                {
+                    windowFactory.CreateWindow(obj.ToString()).ShowWindow();
+                }, null));
+            }
+        }
+
+        public DelegateCommand CloseAppCommand
+        {
+            get
+            {
+                return closeAppCommand ?? (closeAppCommand = new DelegateCommand(obj =>
+                {
+                    if (obj is IWindow window)
+                        window.CloseApp();
+
+                }, null));
+            }
+        }
+
+        public DelegateCommand MoveCommand
+        {
+            get
+            {
+                return moveCommand ?? (moveCommand = new DelegateCommand(obj =>
+                {
+                    if (obj is IWindow window)
+                        window.MoveWindow();
+                },null));
+            }
+        }
+
         public MainVM()
         {
-            //мне не нравится что VM знает об контроле
-            CurrentView = new UserControlAllMusic();
-
+            windowFactory = new WindowFactory();
+            Options.MusicOptions.Main = this;
+            CurrentView = new FirstPageVM();
         }
+
 
         public int Index
         {

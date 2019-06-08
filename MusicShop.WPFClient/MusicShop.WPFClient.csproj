@@ -88,17 +88,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Auth.xaml.cs">
-      <DependentUpon>Auth.xaml</DependentUpon>
+    <Compile Include="LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DelegateCommand.cs" />
+    <Compile Include="Services\DelegateCommand.cs" />
     <Compile Include="Models\Helpers.cs" />
-    <Compile Include="BasicTests\Test.cs" />
     <Compile Include="Models\Responses.cs" />
+    <Compile Include="Services\IWindow.cs" />
+    <Compile Include="Services\IHavePassword.cs" />
+    <Compile Include="Services\WindowFactory.cs" />
     <Compile Include="ViewModels\AllMusicVM.cs" />
-    <Compile Include="BaseVM.cs" />
+    <Compile Include="Services\BindableBase.cs" />
     <Compile Include="ViewModels\CartVM.cs" />
     <Compile Include="ViewModels\FirstPageVM.cs" />
+    <Compile Include="ViewModels\LoginVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\PerformersVM.cs" />
     <Compile Include="ViewModels\ProfileVM.cs" />
@@ -118,7 +121,7 @@
     <Compile Include="Views\UserControlPublishers.xaml.cs">
       <DependentUpon>UserControlPublishers.xaml</DependentUpon>
     </Compile>
-    <Page Include="Auth.xaml">
+    <Page Include="LoginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -126,7 +129,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -137,8 +140,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\UserControlCart.xaml">
@@ -188,12 +191,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Venom.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Epitaph.jpg" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

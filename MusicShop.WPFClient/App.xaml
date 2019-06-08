@@ -1,8 +1,7 @@
 ﻿<Application x:Class="MusicShop.WPFClient.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MusicShop.WPFClient"
-             StartupUri="MainWindow.xaml">
+             StartupUri="MainView.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -24,6 +23,7 @@
             <!-- accent -->
             <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#5C5B5E"/>
             <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#FFFFFF"/>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
