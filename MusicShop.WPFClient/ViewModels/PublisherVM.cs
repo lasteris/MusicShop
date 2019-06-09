@@ -10,7 +10,7 @@ namespace MusicShop.WPFClient.ViewModels
         private PublisherResponse selectedPublisher;
         private DelegateCommand toPublishersAuthors;
         //private DelegateCommand toSite;
-        public readonly MusicShopAPIHelper Helper;
+        public readonly APIHelper Helper;
 
         public DelegateCommand GoToPublishersAuthorsCommand
         {
@@ -51,7 +51,7 @@ namespace MusicShop.WPFClient.ViewModels
         }
         public PublisherVM()
         {
-            Helper = new MusicShopAPIHelper();
+            Helper = new APIHelper();
             Publishers = new ObservableCollection<PublisherResponse>(Helper.GetAllPublishersAsync());
         }
     }

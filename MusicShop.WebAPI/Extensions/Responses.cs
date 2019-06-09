@@ -10,6 +10,8 @@ namespace MusicShop.WebAPI.Extensions
         public string Album { get; set; }
         public string Image { get; set; }
         public DateTime DateRelease { get; set; }
+        public double Price { get; set; }
+        public int Identity { get; set; }
     }
     public class PublisherResponse
     {
@@ -32,6 +34,7 @@ namespace MusicShop.WebAPI.Extensions
     }
     public class ClientResponse
     {
+        public int Identity { get; set; }
         public string Name { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }

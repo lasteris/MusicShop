@@ -5,6 +5,7 @@ namespace MusicShop.WPFClient.ViewModels
 {
    public class MainVM : BindableBase
     {
+        private bool isVisible;
         private int index;
         public readonly WindowFactory windowFactory;
         private object currentView;
@@ -12,6 +13,7 @@ namespace MusicShop.WPFClient.ViewModels
         private DelegateCommand toLoginCommand;
         private DelegateCommand closeAppCommand;
         private DelegateCommand moveCommand;
+        private DelegateCommand outCommand;
         public DelegateCommand GoToSelectedViewCommand
         {
             get
@@ -79,10 +81,33 @@ namespace MusicShop.WPFClient.ViewModels
                 return toLoginCommand ?? (toLoginCommand = new DelegateCommand(obj =>
                 {
                     windowFactory.CreateWindow(obj.ToString()).ShowWindow();
-                }, null));
+
+                    if(Options.MusicOptions.User.Name != "Guest")
+                    {
+                        IsVisible = true;
+                    }
+
+                }, obj => Options.MusicOptions.User.Name == "Guest"));
             }
         }
 
+        public DelegateCommand OutCommand
+        {
+            get
+            {
+                return outCommand ?? (outCommand = new DelegateCommand(obj =>
+                {
+
+                    Options.MusicOptions.User = new ClientResponse
+                    {
+                        Login = "Guest",
+                        Password = "Guest"
+                    };
+                        IsVisible = false;
+
+                }, obj => Options.MusicOptions.User.Name != "Guest"));
+            }
+        }
         public DelegateCommand CloseAppCommand
         {
             get
@@ -113,6 +138,8 @@ namespace MusicShop.WPFClient.ViewModels
             windowFactory = new WindowFactory();
             Options.MusicOptions.Main = this;
             CurrentView = new FirstPageVM();
+
+            IsVisible = false;
         }
 
 
@@ -134,6 +161,18 @@ namespace MusicShop.WPFClient.ViewModels
                 RaisePropertyChanged("CurrentView");
             }
         }
-        
-    }
+        public bool IsVisible
+        {
+            get
+            {
+                return isVisible;
+            }
+            set
+            {
+                isVisible = value;
+                RaisePropertyChanged("IsVisible");
+            }
+        }
+
+   }
 }

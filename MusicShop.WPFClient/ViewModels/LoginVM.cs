@@ -8,6 +8,8 @@ namespace MusicShop.WPFClient.ViewModels
         private string password;
         private bool isCreature;
         private DelegateCommand loginCommand;
+        private string name;
+        private string phone;
 
         public DelegateCommand LoginCommand
         {
@@ -19,21 +21,35 @@ namespace MusicShop.WPFClient.ViewModels
                     {
                         var securePass = havePassword.Password;
 
-                        //если IsCreature true, то надо отправить Post на клиента
-
-                        if(Helper.TryLogin(Login, securePass))
+                        if (IsCreature)
                         {
-                            if(obj is IWindow window)
+                            if(Helper.TryRegister(Login, securePass, Name, Phone))
                             {
-                                window.CloseWindow();
+
+                                if (obj is IWindow window)
+                                {
+                                    window.CloseWindow();
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            if (Helper.TryLogin(Login, securePass))
+                            {
+                                if (obj is IWindow window)
+                                {
+                                    window.CloseWindow();
+                                }
                             }
                         }
+                        
                     }
                 }, null));
             }
         }
         
-        public readonly MusicShopAPIHelper Helper;
+        public readonly APIHelper Helper;
 
         public string Login
         {
@@ -59,6 +75,30 @@ namespace MusicShop.WPFClient.ViewModels
                 RaisePropertyChanged("Password");
             }
         }
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                name = value;
+                RaisePropertyChanged("Name");
+            }
+        }
+        public string Phone
+        {
+            get
+            {
+                return phone;
+            }
+            set
+            {
+                phone = value;
+                RaisePropertyChanged("Phone");
+            }
+        }
         public bool IsCreature
         {
             get
@@ -71,9 +111,10 @@ namespace MusicShop.WPFClient.ViewModels
                 RaisePropertyChanged("IsCreature");
             }
         }
+
         public LoginVM()
         {
-            Helper = new MusicShopAPIHelper();
+            Helper = new APIHelper();
         }
     }
 }

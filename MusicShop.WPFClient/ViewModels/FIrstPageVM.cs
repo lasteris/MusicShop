@@ -10,7 +10,7 @@ namespace MusicShop.WPFClient.ViewModels
         private DelegateCommand toSelectedMusic;
         private GenreResponse selectedGenre;
 
-        public MusicShopAPIHelper ext;
+        public APIHelper ext;
 
         public GenreResponse SelectedGenre
         {
@@ -74,7 +74,7 @@ namespace MusicShop.WPFClient.ViewModels
         }
         public FirstPageVM()
         {
-            ext = new MusicShopAPIHelper();
+            ext = new APIHelper();
             Genres = new ObservableCollection<GenreResponse>(ext.GetAllGenresAsync());
         }
 

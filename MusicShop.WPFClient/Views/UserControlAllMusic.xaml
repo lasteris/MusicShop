@@ -15,7 +15,8 @@
     <Grid>
         <ScrollViewer>
             <ListBox ItemsSource="{Binding Music}"
-                     SelectedItem="{Binding Song}"> <!--Binding-->
+                     SelectedItem="{Binding Song}"
+                     x:Name="ListViewMusic"> <!--Binding-->
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}">
                         <Setter Property="Background" Value="Transparent" />
@@ -46,7 +47,9 @@
                                         VerticalAlignment="Bottom"
                                         HorizontalAlignment="Right"
                                         Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                                        ToolTip="Добавить композицию в корзину">
+                                        ToolTip="Добавить композицию в корзину"
+                                        Command="{Binding ElementName=ListViewMusic, Path=DataContext.AddToCartCommand}"
+                                        CommandParameter="{Binding}">
                                     <wpf:PackIcon Kind="AddShoppingCart"/>
                                 </Button>
 
@@ -59,6 +62,8 @@
                                                VerticalAlignment="Center" TextWrapping="Wrap"/><!--Binding Album-->
                                     <TextBlock Text="{Binding DateRelease, StringFormat={}Выпущено {0:dd.MM.yyyy}}"
                                                VerticalAlignment="Center" TextWrapping="Wrap"/><!--Binding DateRelease-->
+                                    <TextBlock Text="{Binding Price, StringFormat={}Прайс {0:N2}$}"
+                                               VerticalAlignment="Center" TextWrapping="Wrap"/>
                                 </StackPanel>
                                 
                                 <!--<StackPanel Orientation="Horizontal"

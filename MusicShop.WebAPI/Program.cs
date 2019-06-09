@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace MusicShop.WebAPI
 {
@@ -10,27 +11,34 @@ namespace MusicShop.WebAPI
     {
         public static void Main(string[] args)
         {
-            //// получаем путь к файлу 
-            //var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
-            //// путь к каталогу проекта
-            //var pathToContentRoot = Path.GetDirectoryName(pathToExe);
-            //// создаем хост
-            //var host = WebHost.CreateDefaultBuilder(args)
-            //        .UseContentRoot(pathToContentRoot)
-            //        .UseStartup<Startup>()
-            //        .Build();
-            //// запускаем в виде службы
-            //host.RunAsService();
+            var isService = !(Debugger.IsAttached || args.Contains("--console"));
+            var pathToContentRoot = Directory.GetCurrentDirectory();
+            var webHostArgs = args.Where(arg => arg != "--console").ToArray();
 
-            
-             CreateWebHostBuilder(args).Build().Run();
-            
+            if (isService)
+            {
+                var pathToExe = Process.GetCurrentProcess().MainModule.FileName;
+                pathToContentRoot = Path.GetDirectoryName(pathToExe);
+            }
 
+            var host = WebHost.CreateDefaultBuilder(webHostArgs)
+
+                .UseContentRoot(pathToContentRoot)
+
+                .UseStartup<Startup>()
+
+                .Build();
+
+            if (isService)
+            {
+                host.RunAsService();
+            }
+
+            else
+            {
+                host.Run();
+            }
         }
 
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
     }
 }

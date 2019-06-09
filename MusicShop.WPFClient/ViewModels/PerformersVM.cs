@@ -12,7 +12,7 @@ namespace MusicShop.WPFClient.ViewModels
     {
         private AuthorResponse performer;
         private DelegateCommand toSelectedPerformer;
-        public readonly MusicShopAPIHelper Helper;
+        public readonly APIHelper Helper;
 
         public DelegateCommand GoToSelectedPerformer
         {
@@ -48,7 +48,7 @@ namespace MusicShop.WPFClient.ViewModels
 
         public PerformersVM()
         {
-            Helper = new MusicShopAPIHelper();
+            Helper = new APIHelper();
             Performers = new ObservableCollection<AuthorResponse>(Helper.GetAllPerformersAsync(Options.MusicOptions));
         }
     }

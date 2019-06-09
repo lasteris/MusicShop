@@ -24,6 +24,7 @@
         <views:UserControlPerformers x:Key="PerformersView"/>
         <views:UserControlProfile x:Key="ProfileView"/>
         <views:UserControlPublishers x:Key="PublishersView"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
     
     <Window.DataContext>
@@ -172,7 +173,8 @@
                                        Margin="20,0"/>
                             </StackPanel>
                         </ListViewItem>-->
-                        <ListViewItem Height="60">
+                        <ListViewItem Height="60"
+                                      Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
                             <StackPanel Orientation="Horizontal">
                                 <wpf:PackIcon Kind="ShoppingCart" VerticalAlignment="Center" Margin="5"/>
                                 <TextBlock VerticalAlignment="Center" 
@@ -182,7 +184,8 @@
                                        Margin="20,0"/>
                             </StackPanel>
                         </ListViewItem>
-                        <ListViewItem Height="60">
+                        <ListViewItem Height="60"
+                                      Visibility="{Binding IsVisible, Converter={StaticResource BoolToVis}}">
                             <StackPanel Orientation="Horizontal">
                                 <wpf:PackIcon Kind="Account" VerticalAlignment="Center" Margin="5"/>
                                 <TextBlock VerticalAlignment="Center" 
@@ -193,18 +196,30 @@
                             </StackPanel>
                         </ListViewItem>
                     </ListView>
-
-                    <Button Grid.Row="1"
+                    
+                    <StackPanel Grid.Row="1">
+                        <Button 
                             Background="#fafafa"
                             Foreground="#000000"
                             VerticalAlignment="Top"
                             HorizontalAlignment="Stretch"
                             Margin="5"
                             wpf:RippleAssist.Feedback="#DD000000"
-                            x:Name="AuthButton"
                             Command="{Binding LoginCommand}" CommandParameter="LoginView">
-                        Авторизация
-                    </Button>
+                            Авторизация
+                        </Button>
+                        <Button 
+                            Background="#fafafa"
+                            Foreground="#000000"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Stretch"
+                            Margin="5"
+                            wpf:RippleAssist.Feedback="#DD000000"
+                            Command="{Binding OutCommand}" CommandParameter="LoginView">
+                            Выход из аккаунта
+                        </Button>
+                    </StackPanel>
+                    
                 </Grid>
             </wpf:Card>
         </Grid>

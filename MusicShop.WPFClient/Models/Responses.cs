@@ -4,11 +4,13 @@ namespace MusicShop.WPFClient.Models
 {
     public class SongResponse
     {
+        public int Identity { get; set; }
         public string Name { get; set; }
         public string Author { get; set; }
         public string Album { get; set; }
         public string Image { get; set; }
         public DateTime DateRelease { get; set; }
+        public double Price { get; set; }
     }   
     public class PublisherResponse
     {
@@ -37,5 +39,6 @@ namespace MusicShop.WPFClient.Models
         public string Password { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public int Identity { get; set; }
     }
 }

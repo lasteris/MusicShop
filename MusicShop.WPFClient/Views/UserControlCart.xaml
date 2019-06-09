@@ -16,17 +16,27 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Button Grid.Row="1"
-                Background="#fafafa"
-                Foreground="#000000"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Margin="5"
-                wpf:RippleAssist.Feedback="#DD000000"
-                Command="{Binding BuyCommand}"
-                CommandParameter="{Binding Music}">
-            Оформить покупку
-        </Button>
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom">
+            <Button Background="#fafafa"
+                    Foreground="#000000"               
+                    Margin="5"
+                    wpf:RippleAssist.Feedback="#DD000000"
+                    Command="{Binding ClearCartCommand}"
+                    CommandParameter="{Binding Music}">
+                    Очистить корзину
+            </Button>
+            <Button Background="#fafafa"
+                    Foreground="#000000"
+                    Margin="5"
+                    wpf:RippleAssist.Feedback="#DD000000"
+                    Command="{Binding BuyCommand}"
+                    CommandParameter="{Binding Music}">
+                    Оформить покупку
+            </Button>
+        </StackPanel>
+        
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ListBox ItemsSource="{Binding Music}"
                      x:Name="ListViewCart"
@@ -60,7 +70,9 @@
                                         VerticalAlignment="Bottom"
                                         HorizontalAlignment="Right"
                                         Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
-                                        ToolTip="Удалить из корзины">
+                                        ToolTip="Удалить из корзины"
+                                        Command="{Binding ElementName=ListViewCart, Path=DataContext.RemoveFromCartCommand}"
+                                        CommandParameter="{Binding}">
                                     <wpf:PackIcon Kind="RemoveShoppingCart"/>
                                 </Button>
 
@@ -72,6 +84,10 @@
                                     <TextBlock Text="{Binding Album, StringFormat={}Альбом {0}}"
                                                VerticalAlignment="Center" TextWrapping="Wrap"/>
                                     <TextBlock Text="{Binding DateRelease, StringFormat={}Выпущено {0:dd.MM.yyyy}}"
+                                               VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding DateRelease, StringFormat={}Выпущено {0:dd.MM.yyyy}}"
+                                               VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{Binding Price, StringFormat={}Прайс {0:N2}$}"
                                                VerticalAlignment="Center" TextWrapping="Wrap"/>
                                 </StackPanel>
                             </Grid>

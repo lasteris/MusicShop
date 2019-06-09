@@ -6,16 +6,43 @@ namespace MusicShop.WPFClient.ViewModels
     public class CartVM : BindableBase
     {
         private DelegateCommand buyCommand;
+        private DelegateCommand clearCartCommand;
+        private DelegateCommand removeFromCartCommand;
         private SongResponse selectedSong;
 
-        public readonly MusicShopAPIHelper Helper;
+        public readonly APIHelper Helper;
         public DelegateCommand BuyCommand
         {
             get
             {
                 return buyCommand ?? (buyCommand = new DelegateCommand(obj =>
                 {
+                    if (Helper.TryCreateOrder())
+                        Music.Clear();
 
+                }, null));
+            }
+        }
+        public DelegateCommand ClearCartCommand
+        {
+            get
+            {
+                return clearCartCommand ?? (clearCartCommand = new DelegateCommand(obj =>
+                {
+                    Music.Clear();
+                }, null));
+            }
+        }
+        public DelegateCommand RemoveFromCartCommand
+        {
+            get
+            {
+                return removeFromCartCommand ?? (removeFromCartCommand = new DelegateCommand(obj =>
+                {
+                    if (obj is SongResponse song)
+                    {
+                        Music.Remove(song);
+                    }
                 }, null));
             }
         }
@@ -29,10 +56,11 @@ namespace MusicShop.WPFClient.ViewModels
                 RaisePropertyChanged("SelectedSong");
             }
         }
-        public ObservableCollection<SongResponse> Music { get; set; } = new ObservableCollection<SongResponse>();
+        public ObservableCollection<SongResponse> Music { get; set; }
         public CartVM()
         {
-            Helper = new MusicShopAPIHelper();
+            Helper = new APIHelper();
+            Music = Options.MusicOptions.Cart;
         }
     }
 }

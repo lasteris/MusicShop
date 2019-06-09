@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MusicShop.WebAPI.Extensions;
@@ -19,14 +21,16 @@ namespace MusicShop.WebAPI.Controllers
         }
         // GET api/v1/music
         [HttpGet]
-        public IActionResult GetAllMusic(bool isNew= false, bool isTop = false, int count= 10, string author= "all", string publisher = "all", string genre = "all")
+        public async Task<IActionResult> GetAllMusic(bool isNew= false, bool isTop = false, int count= 10, string author= "all", string publisher = "all", string genre = "all")
         {
 
             var response = new List<SongResponse>();
 
-            var songs = _context.Songs
-                .Include(s => s.Al)
-                .Include(s => s.Au).AsQueryable();
+            try
+            {
+                var songs = _context.Songs
+               .Include(s => s.Al)
+               .Include(s => s.Au).AsQueryable();
 
                 #region Фильтр по НОВОЙ музыке
                 if (isNew)
@@ -48,15 +52,17 @@ namespace MusicShop.WebAPI.Controllers
                     foreach (var g in groups)
                     {
 
-                        var song = songs.Where(s => s.SongId == g.SongId)
+                        var song = await songs.Where(s => s.SongId == g.SongId)
                                         .Select(s => new SongResponse
                                         {
                                             Name = s.SongName,
                                             Author = s.Au.AuName,
                                             Album = s.Al.AlName,
                                             Image = s.Al.AlImage,
-                                            DateRelease = s.Al.AlDateRelease
-                                        }).Single();
+                                            DateRelease = s.Al.AlDateRelease,
+                                            Price = (double)s.Price,
+                                            Identity = s.SongId
+                                        }).SingleOrDefaultAsync();
 
                         response.Add(song);
 
@@ -79,125 +85,126 @@ namespace MusicShop.WebAPI.Controllers
                         .ThenInclude(au => au.Pub)
                         .Where(s => s.Au.Pub.PubName == publisher);
                 }
-            #endregion
+                #endregion
 
-            #region Фильтр по жанрам
-                if(genre != "all")
+                #region Фильтр по жанрам
+                if (genre != "all")
                 {
-                songs = songs.Include(s => s.Genre).Where(g => g.Genre.GenreName == genre);
+                    songs = songs.Include(s => s.Genre).Where(g => g.Genre.GenreName == genre);
                 }
-            #endregion
+                #endregion
 
-            #region формирование результирующей выборки
-            response = songs.Select(s => new SongResponse
+                #region формирование результирующей выборки
+                response = await songs.Select(s => new SongResponse
+                {
+                    Name = s.SongName,
+                    Author = s.Au.AuName,
+                    Album = s.Al.AlName,
+                    Image = s.Al.AlImage,
+                    DateRelease = s.Al.AlDateRelease,
+                    Price = (double)s.Price,
+                    Identity = s.SongId
+                }).ToListAsync();
+                #endregion
+            }
+            catch (Exception ex)
             {
-                Name = s.SongName,
-                Author = s.Au.AuName,
-                Album = s.Al.AlName,
-                Image = s.Al.AlImage,
-                DateRelease = s.Al.AlDateRelease
-            }).ToList();
-            #endregion
-
+                return BadRequest(ex.Message);
+            }
+           
             return Ok(response);
         }
 
-        [HttpGet("download")]
-        public IActionResult Download()
+        [HttpGet("stream")]
+        public IActionResult Download(string author, string name)
         {
-            return PhysicalFile(@"d:\INNA.mp4", "application/octet-stream");
+            try
+            {
+                return PhysicalFile($"D:\\ServerStorage\\music\\{author} - {name}.mp3", "application/octet-stream");
+            }
+            catch (Exception) {
+                return NoContent();
+            }
+
         }
 
         // Get api/v1/music/publishers
         [HttpGet("publishers")]
-        public IActionResult GetPublishers()
+        public async Task<IActionResult> GetPublishers()
         {
-            var response = _context.Publishers
-                .Include(p => p.Author)
-                .Select(pub => new PublisherResponse()
-                {
+            try
+            {
+                var response = await _context.Publishers
+                    .Include(p => p.Author)
+                    .Select(pub => new PublisherResponse()
+                    {
 
-                    Name = pub.PubName,
-                    Image = pub.PubImage,
-                    Site = pub.PubWebsite,
-                    PerformerCount = pub.Author.Count()
-                }).ToList();
+                        Name = pub.PubName,
+                        Image = pub.PubImage,
+                        Site = pub.PubWebsite,
+                        PerformerCount = pub.Author.Count()
+                    }).ToListAsync();
 
-            return Ok(response);
-        }
-
-        //// Get api/v1/music/top
-        //[HttpGet("top")]
-        //public IActionResult GetTopMusic(int count = 10)
-        //{
-        //    List<SongResponse> response = new List<SongResponse>();
-        //    var groups = _context.Includes.GroupBy(i => i.SongId)
-        //                                  .Select(g => new { SongId = g.Key, Total = g.Count() })
-        //                                  .OrderByDescending(g => g.Total)
-        //                                  .Take(count);
-
-        //    if (groups is null)
-        //        return NotFound();
-
-        //    foreach (var g in groups)
-        //    {
-        //        var song = _context.Songs
-        //            .Where(s => s.SongId == g.SongId)
-        //            .Include(s => s.Al)
-        //            .Include(s => s.Au)
-        //            .Select(s => new SongResponse
-        //            {
-        //                Name = s.SongName,
-        //                Author = s.Au.AuName,
-        //                Album = s.Al.AlName,
-        //                Image = s.Al.AlImage,
-        //                DateRelease = s.Al.AlDateRelease
-        //            }).First();
-
-        //        response.Add(song);
-        //    }
-        //    return Ok(response);
-        //}
-
-    
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }    
 
         [HttpGet("genres")]
-        public IActionResult GetGenres()
-        {
-            var response = _context.Genres.Select(g => new GenreResponse
+        public async Task<IActionResult> GetGenres(){
+            try
             {
-                Name = g.GenreName,
-                Description = g.GenreDesc
-            }).ToList();
+                var response = await _context.Genres.Select(g => new GenreResponse
+                {
+                    Name = g.GenreName,
+                    Description = g.GenreDesc
+                }).ToListAsync();
 
-            if (response == null)
-                return NotFound();
+                if (response == null)
+                    return NotFound();
 
-            return new JsonResult(response);
+                return new JsonResult(response);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
 
         [HttpGet("authors")]
         public IActionResult GetAuthors(string publisher = "all")
         {
-            var authors = _context.Authors.Include(au => au.Song).AsQueryable();
-
-            #region Фильтр по Лейблам
-            if(publisher != "all")
+            try
             {
-                authors = authors.Include(au => au.Pub)
-                                 .Where(au => au.Pub.PubName == publisher);
+                var authors = _context.Authors.Include(au => au.Song).AsQueryable();
+
+                #region Фильтр по Лейблам
+                if (publisher != "all")
+                {
+                    authors = authors.Include(au => au.Pub)
+                                     .Where(au => au.Pub.PubName == publisher);
+                }
+                #endregion
+
+                var response = authors.Select(ar => new AuthorResponse()
+                {
+                    Name = ar.AuName,
+                    Image = ar.AuImage,
+                    MusicCount = ar.Song.Count
+                }).ToList();
+
+                return Ok(response);
             }
-            #endregion
-
-            var response = authors.Select(ar => new AuthorResponse()
+            catch(Exception ex)
             {
-                Name = ar.AuName,
-                Image = ar.AuImage,
-                MusicCount = ar.Song.Count
-            }).ToList();
-
-            return Ok(response);
+                return BadRequest(ex.Message);
+            }
+            
         }
 
     }
